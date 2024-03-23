@@ -1,11 +1,16 @@
 package com.example.finaltestpractise
 
+import android.content.Context
+import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
@@ -14,6 +19,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -37,7 +43,8 @@ class MainActivity : ComponentActivity() {
                 composable("HomeScreen") {
                     PreferenceToggle(navController, prefViewModel)
                 }
-                composable("NextScreen") {
+                composable("ForegroundScreen") {
+                    ForegroundScreen(this@MainActivity)
                 }
             }
         }
@@ -60,5 +67,28 @@ fun PreferenceToggle(navController: NavController, viewModel: PrefViewModel) {
                 viewModel.updateToggleState(newState)
             }
         )
+
+        // Navigate to the ForegroundScreen
+        Button(onClick = {
+            navController.navigate("ForegroundScreen")
+        }, modifier = Modifier.padding(top = 8.dp)) {
+            Text("Foreground Screen")
+        }
+    }
+}
+
+@Composable
+fun ForegroundScreen(context: Context) {
+    Column(modifier = Modifier.padding(16.dp)) {
+        Button(onClick = {
+            context.startForegroundService(Intent(context, CounterForegroundService::class.java))
+        }) {
+            Text("Start Foreground Service")
+        }
+        Button(onClick = {
+            context.stopService(Intent(context, CounterForegroundService::class.java))
+        }, modifier = Modifier.padding(top = 8.dp)) {
+            Text("Stop Foreground Service")
+        }
     }
 }
