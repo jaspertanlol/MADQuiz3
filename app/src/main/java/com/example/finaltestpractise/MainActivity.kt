@@ -14,6 +14,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.example.finaltestpractise.ui.theme.FinalTestPractiseTheme
 
 class MainActivity : ComponentActivity() {
@@ -24,14 +28,16 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            FinalTestPractiseTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    // Display the toggle preference
-                    PreferenceToggle(prefViewModel)
+            // Define Nav Controller
+            val navController = rememberNavController()
+            NavHost(
+                navController = navController,
+                startDestination = "HomeScreen"
+            ) {
+                composable("HomeScreen") {
+                    PreferenceToggle(navController, prefViewModel)
+                }
+                composable("NextScreen") {
                 }
             }
         }
@@ -39,7 +45,7 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun PreferenceToggle(viewModel: PrefViewModel) {
+fun PreferenceToggle(navController: NavController, viewModel: PrefViewModel) {
     Column {
         // Collect the latest toggle state from the ViewModel
         val toggleState by viewModel.toggleState.collectAsState()
