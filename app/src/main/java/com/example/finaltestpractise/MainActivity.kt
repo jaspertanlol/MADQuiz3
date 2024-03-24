@@ -2,34 +2,35 @@ package com.example.finaltestpractise
 
 import android.content.Context
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.finaltestpractise.ui.theme.FinalTestPractiseTheme
 
 class MainActivity : ComponentActivity() {
 
-    // Create an instance of the ViewModel
+    // Create an instance of the PrefViewModel
     private val prefViewModel: PrefViewModel by viewModels()
+    // Create an instance of the CommentViewModel
+    private val commentViewModel: CommentViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,6 +46,9 @@ class MainActivity : ComponentActivity() {
                 }
                 composable("ForegroundScreen") {
                     ForegroundScreen(this@MainActivity)
+                }
+                composable("CommentScreen") {
+                    CommentScreen(commentViewModel)
                 }
             }
         }
@@ -74,6 +78,12 @@ fun PreferenceToggle(navController: NavController, viewModel: PrefViewModel) {
         }, modifier = Modifier.padding(top = 8.dp)) {
             Text("Foreground Screen")
         }
+        // Navigate to the CommentScreen
+        Button(onClick = {
+            navController.navigate("CommentScreen")
+        }, modifier = Modifier.padding(top = 8.dp)) {
+            Text("Comment Screen")
+        }
     }
 }
 
@@ -92,3 +102,24 @@ fun ForegroundScreen(context: Context) {
         }
     }
 }
+
+@Composable
+fun CommentScreen(viewModel: CommentViewModel) {
+    val comments by viewModel.comments.observeAsState(initial = emptyList())
+
+    LazyColumn {
+        items(comments) { comment ->
+            CommentItem(comment)
+        }
+    }
+}
+
+@Composable
+fun CommentItem(comment: com.example.finaltestpractise.Comment) {
+    Column(modifier = Modifier.padding(16.dp)) {
+        Text(text = "Name: ${comment.name}", fontWeight = FontWeight.Bold)
+        Text(text = "Email: ${comment.email}")
+        Text(text = "Body: ${comment.body}")
+    }
+}
+
