@@ -18,4 +18,8 @@ interface ApiService {
     // This tells Retrofit and the Gson converter how to parse the JSON response into Kotlin objects.
     // Here, it expects the JSON response to be an array of comment objects, which it will parse into a List of Comment Kotlin objects.
     fun getComments(): Call<List<Comment>> // Return a list of comments
+
+    // Photos endpoint
+    @GET("photos")
+    fun getPhotos(): Call<List<Photo>>
 }

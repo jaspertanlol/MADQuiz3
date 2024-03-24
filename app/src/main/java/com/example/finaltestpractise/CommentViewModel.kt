@@ -14,6 +14,10 @@ class CommentViewModel : ViewModel() {
     // This exposes _toggleState to the outside world, so other components can read
     val comments: LiveData<List<Comment>> = _comments
 
+    // For photos
+    private val _photos = MutableLiveData<List<Photo>>()
+    val photos: LiveData<List<Photo>> = _photos
+
     init { // Run this code when the ViewModel is created
         fetchComments()
     }
@@ -45,6 +49,20 @@ class CommentViewModel : ViewModel() {
             // The call object represents the failed request, and the Throwable object represents the reason for the failure.
             override fun onFailure(call: Call<List<Comment>>, t: Throwable) {
                 // Here you would handle the failure, for example by logging the error or updating the UI to show an error message.
+            }
+        })
+    }
+
+    fun fetchPhotos() {
+        RetrofitClient.instance.getPhotos().enqueue(object : retrofit2.Callback<List<Photo>> {
+            override fun onResponse(call: Call<List<Photo>>, response: Response<List<Photo>>) {
+                if (response.isSuccessful) {
+                    _photos.value = response.body()
+                }
+            }
+
+            override fun onFailure(call: Call<List<Photo>>, t: Throwable) {
+                // Handle failure
             }
         })
     }

@@ -74,4 +74,7 @@ dependencies {
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
     // Live data
     implementation("androidx.compose.runtime:runtime-livedata:1.0.0")
+    // Coil for image loading
+    implementation("io.coil-kt:coil-compose:1.4.0")
+
 }
